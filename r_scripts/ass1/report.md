@@ -90,8 +90,163 @@
 
 
 
-- AGG
+- **AGG**
 
 $$
-\bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} = 0.000265757\pm * = \\= \pm  = [, ]
+\bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} = 0.000265757 \pm 1.965215 * \frac{0.005975841}{\sqrt{454}} = \\= 0.000265757 \pm 0.0005511643 = [-0.0002854073, 0.0008169213 ]
 $$
+
+- **VAW**
+
+$$
+\bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} = 0.00179379 \pm 1.965215
+* \frac{0.03608286}{\sqrt{454}} = \\=  0.00179379 \pm  0.003327998 = [-0.001534208,  0.005121788 ]
+$$
+
+- **IWN**
+
+$$
+\bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} =0.001187679 \pm 1.965215* \frac{0.03201547}{\sqrt{454}} = \\= 0.001187679  \pm 0.002952853  = [-0.001765174,  0.004140533 ]
+$$
+
+- **SPY**
+
+$$
+\bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} = 0.001360105 \pm 1.965215* \frac{0.02478601}{\sqrt{454}} = \\= 0.001360105  \pm 0.002286065  = [-0.000925960, 0.003646171]
+$$
+
+
+
+|      | Lower bound of CI | Upper bound of CI |
+| ---- | ----------------- | ----------------- |
+| AGG  | -0.0002854073     | 0.0008169213      |
+| VAW  | -0.001534208      | 0.005121788       |
+| IWN  | -0.001765174      | 0.004140533       |
+| SPY  | -0.000925960      | 0.003646171       |
+
+
+
+```R
+> t.test(D$AGG, conf.level=0.95)$conf.int
+[1] -0.0002854073  0.0008169213
+> t.test(D$VAW, conf.level=0.95)$conf.int
+[1] -0.001534208  0.005121788
+> t.test(D$IWN, conf.level=0.95)$conf.int
+[1] -0.001765174  0.004140533
+> t.test(D$SPY, conf.level=0.95)$conf.int
+[1] -0.000925960  0.003646171
+```
+
+### h) Hypothesis test
+
+
+
+$$
+H_0: \mu_{\text{AGG}} = 0 \\
+H_1: \mu_{\text{AGG}} \ne 0
+$$
+
+- I choose $\alpha=0.05$ significant level (some evidence).
+
+
+**By using Method 3.36**
+
+**1.**  
+$$
+t_{obs}= \frac{\bar{x}-\mu_{0}}{s/\sqrt{n}}= \frac{0.000265757}{0.005975841/\sqrt{454}} = 0.2983265
+$$
+
+**2.** 
+$$
+\text{p-value}= 2*P(T>|t_{obs}|) = 0.3438511
+$$
+
+```r
+> tobsAGG <- (meanAGG)/(sAGG/sqrt(454))
+> 2*(1-pt(tobsAGG, df=454-1))
+[1] 0.3438511
+```
+
+**3.  Conclusion:**
+
+$\text{p-value}$ (0.3438511) is more than $\alpha$ (0.05), so we can accept $H_{0}$.  So the mean weekly return from AGG does not deviate significantly from the return obtained by saving money under the pillow.
+
+ The same conclusion could have been reached using the CI, because it includes 0, which means that 0 is accepted value at 95% significant level. 
+
+
+
+### i) Welch t-test for compering AGG and VEW 
+
+
+$$
+H_{0} \ : \ \mu_{AGG}= \mu_{VAW} \equiv \mu_{AGG}-\mu_{VAW}= 0 \\
+H_{1}\ : \ \mu_{AGG} \ne \mu_{VAW} \equiv \mu_{AGG}-\mu_{VAW}\ne 0
+$$
+
+- I choose $\alpha=0.05$ significant level (some evidence).
+
+
+**By method 3.51(Welch):**
+
+
+
+1. 
+
+$$
+t_{obs}= \frac{(\bar{x}_1-\bar{x}_2)-\delta_0}{\sqrt{s_1^2/n_1+s^2_2/n_2}}= -1.973387\\
+v = \frac{(\frac{s^2_1}{n_1}+\frac{s^2_2}{n_2})^2}{\frac{(s_1^2/n_1)^2}{n_1-1}+\frac{(s_2^2/n_2)^2}{n_2-1}}= 54.38591
+$$
+
+
+
+```r
+> tobsAGGVAW <- (meanAGG-meanVAW)/(sqrt((sAGG^2/454)+(sVAW^2/454)))
+[1] -0.8901926
+> vAGGVAW <- ((sAGG^2/454)+(sVAW^2/454))^2/
++   (((sAGG^2/454)^2/(454-1))+((sVAW^2/454)^2/(454-1)))
+[1] 477.8312
+
+
+```
+
+
+
+2. 
+
+$$
+\text{p-value} = 0.3738104
+$$
+
+```R
+> 2*(1-pt(abs(tobsAGGVAW), df=vAGGVAW))
+[1] 0.3738104
+```
+
+3. Conclusion
+
+On a 5% level we cannot conclude a significant difference in the mean weekly return differs, because the calculated $\text{p-value}=0.3738104 > \alpha=0.05$  
+
+
+
+```R
+> t.test(D$VAW, D$AGG)
+
+	Welch Two Sample t-test
+
+data:  D$VAW and D$AGG
+t = 0.89019, df = 477.83, p-value = 0.3738
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.001844827  0.004900893
+sample estimates:
+  mean of x   mean of y 
+0.001793790 0.000265757 
+```
+
+
+
+
+
+### j) 
+
+According to Remark 3.59, if CIs do overlap (like in this case), then the same conclusion couldn't be drawn from CIs. So it was necessary to carry out the statistical test.   

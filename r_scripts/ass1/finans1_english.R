@@ -6,7 +6,7 @@
 ## "Session -> Set Working Directory -> To Source File Location" 
 ## Note: In R only "/" is used for separating in paths 
 ## (i.e. no backslash).
-setwd("ass1/")
+setwd("ass1")
 getwd()
 
 ###########################################################################
@@ -123,6 +123,8 @@ wallyplot(D$VAW, FUN=qqwrap, ylim=c(-3,3))
 logAGG <- log(D$AGG)
 ###########################################################################
 ## Confidence interval for the mean
+
+qt(0.975,454-1)
 
 ## CI for the mean weekly return from AGG
 t.test(D$AGG, conf.level=0.95)$conf.int
