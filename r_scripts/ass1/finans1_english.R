@@ -113,13 +113,16 @@ summary(D$SPY)
 qqnorm(D$AGG)
 qqline(D$AGG)
 
-## Walley
+## Wally
+library(MESS)
 qqwrap <- function(x, y, ...){
   stdy <- (y-mean(y))/sd(y)
   qqnorm(stdy, main="", ...)
   qqline(stdy)}
 
-wallyplot(D$VAW, FUN=qqwrap, ylim=c(-3,3))
+wallyplot(D$SPY, FUN=qqwrap, ylim=c(-3,3))
+
+
 logAGG <- log(D$AGG)
 ###########################################################################
 ## Confidence interval for the mean
@@ -146,6 +149,17 @@ t.test(D$VAW, D$AGG)
 
 ###########################################################################
 ## Computing correlations
+meanVAW = mean(D$VAW, na.rm=TRUE)
+meanIWN = mean(D$IWN, na.rm=TRUE)
+
+covVAW_IWN <- sum((D$VAW-meanVAW)*(D$IWN-meanIWN))/453
+covVAW_IWN
+corrVAW_IWN <-covVAW_IWN / (sqrt(varVAW)*sqrt(varIWN))
+corrVAW_IWN
+
+plot(D$VAW, D$IWN, xlab="VAW", ylab="IWN")
+
+
 
 ## Computing the correlation between selected ETFs
 cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")

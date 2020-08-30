@@ -2,7 +2,7 @@
 
 ## Descriptive analysis
 
-### a) A short description of the data
+#### a) A short description of the data
 
 - Quantitative data
 - Date of first observation: 2006-5-5, Date of the last observation: 2015-5-8
@@ -16,7 +16,7 @@
 
 
 
-### b) A density histogram of the weekly return from the EFT AGG
+#### b) A density histogram of the weekly return from the EFT AGG
 
 <!--But why density? Is it not more clear with frequency?-->
 
@@ -30,7 +30,7 @@
 
 
 
-### c) Plots illustrating the weekly return over time
+#### c) Plots illustrating the weekly return over time
 
 ![](images/returns_AGG.png)
 
@@ -45,7 +45,7 @@
 
 
 
-### d) A box plot of the weekly returns by ETF
+#### d) A box plot of the weekly returns by ETF
 
 ![](images/returns_box.png)
 
@@ -57,7 +57,7 @@
 
 
 
-### e) Summary statistics
+#### e) Summary statistics
 
 |                             | AGG         | VAW         | IWN         | SPY          |
 | --------------------------- | ----------- | ----------- | ----------- | ------------ |
@@ -71,8 +71,43 @@
 
 - One could gain information about differences between the means and  the medians, so it is easier to determine if data is skewed. 
 
-### f) Statistical models
+## Statistical analysis
 
+#### f) Statistical models
+
+
+$$
+AGG \sim N(0.000265757,0.005975841^2 ) \\ 
+VAW \sim N(0.00179379,0.03608286^2 ) \\
+IWN \sim N(0.001187679,0.03201547^2 ) \\
+SPY \sim N(0.001360105,0.02478601^2 ) \\
+$$
+
+- The wally plot of AGG:
+
+![](images/wally_AGG.png)
+
+- The wally plot of VAW:
+
+![](images/wally_VAW.png)
+
+- The wally plot of IWN:
+
+![](images/wally_IWN.png)
+
+- The wally plot of SPY:
+
+![](images/wally_SPY.png)
+
+- ~~I chose the original datafor all ETFs in the Wally plots, because .~~ It seems that the original data sets for all ETFs deviates more from the line than the simulated data sets in the wally plots, which means that the weekly returns of these four ETFs possibly don't follow a normal distribution. 
+- CLT states that "The underlying distribution of a sample can be disregarded when carrying out inference related to the the mean" [^DTU] (p. 136), so that means that we can still define CIs and make Hypothesis testing for the mean, although the distribution of weekly returns doesn't follows a normal distribution.  
+
+
+
+<!--Skal jeg arguementere hvovfor jeg har valgt normaldistribution? I bogen er der kun: "The normal distribution appears naturally for many phenomena... Side 71"-->
+
+- Måske state normal models and and than perform validtion that is not correct. 
+- When to assume normal distribution? Quantative?  Argue here. 
 - AGG seems to be not Normal. What to do? 
 - I am not sure how I should relate CLT to this project. As I understand it should be taken  many samples. But here was taken only one sample, or not? 
 - Jeg forstå heller ikke her hvad er population? Dvs. er det fremtiden? CTL siger, hvis vi tager 100 gange sample, så 95% skal indeholde den ægte mean. Men hvordan kan man tage en sample igen i dette tilfælde? 
@@ -80,8 +115,11 @@
 - Men CLT kan vi kun væer
 - CLT means that we can be sure only 95% that our calculated Confidence interval will contain the true mean. That is, if we could take 100 samples, only 95 CI of these samples would contain the true mean.  
 - When we cannot assume a normal distribution comes CLT to rescue. **OK we trying to find CI for the mean. And if the mean follows normal distribution so that's why we can find CI by using standard normal distribution or now t-distribution, although the distribution of population does not follow normal distribution**
+- Vi behøver ikke at have en Normal distributon if same size is huge. 
+- Maybe cofidence interval is paremtas (lay on) CLT. Find CI in the book and see how it is relæated to CLT. . Jeg forstå bare ikke en ting. CLT siger at vi skal tage mange gange *mean* til at få til at fungere, men vi gør det ikke her, dvs. tage mange gange *mean*
+- 
 
-### g) Confidence interval for the mean
+#### g) Confidence interval for the mean
 
 ```R
 > qt(0.975,454-1)
@@ -137,7 +175,7 @@ $$
 [1] -0.000925960  0.003646171
 ```
 
-### h) Hypothesis test
+#### h) Hypothesis test
 
 
 
@@ -175,7 +213,7 @@ $\text{p-value}$ (0.3438511) is more than $\alpha$ (0.05), so we can accept $H_{
 
 
 
-### i) Welch t-test for compering AGG and VEW 
+#### i) Welch t-test for compering AGG and VEW 
 
 
 $$
@@ -247,6 +285,56 @@ sample estimates:
 
 
 
-### j) 
+#### j) Conclusion from CIs
 
 According to Remark 3.59, if CIs do overlap (like in this case), then the same conclusion couldn't be drawn from CIs. So it was necessary to carry out the statistical test.   
+
+
+
+#### k) Correlation
+
+<!--JEg er lidt forvirrede her omkring, hvilke notation skal jeg bruge her? Side 275 eller  Definition 1.18-->
+
+
+$$
+s_{VAWIWN} = \frac{1}{n-1}\sum_{i=1}^{n}{(VAW_{i}-\bar{VAW})(IWN_{i}-\bar{IWN})} = 0.0009838237
+$$
+
+
+```R
+> covVAW_IWN <- sum((D$VAW-meanVAW)*(D$IWN-meanIWN))/453
+[1] 0.0009838237
+```
+
+
+$$
+r = \frac{s_{VAWIWN}}{s_{VAW}*s_{IWN}} = 0.0009838237
+$$
+
+```r
+> corrVAW_IWN <-covVAW_IWN / (sqrt(varVAW)*sqrt(varIWN))
+[1] 0.8516407
+```
+
+- The calculated correlation is the same as in the table below.
+
+```R
+> cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")
+           AGG        VAW        IWN        SPY
+AGG  1.0000000 -0.1975679 -0.1352621 -0.2187164
+VAW -0.1975679  1.0000000  0.8516407  0.8863608
+IWN -0.1352621  0.8516407  1.0000000  0.9100966
+SPY -0.2187164  0.8863608  0.9100966  1.0000000
+```
+
+- The scatter plot below illustrates as expected moderately strong linear relationship, which has a positive general trend.
+
+![](images/corr_VAW_IWN.png)
+
+```R
+plot(D$VAW, D$IWN, xlab="VAW", ylab="IWN")
+```
+
+
+
+[^DTU]: Per B. Brockhoff, Jan K. Møller, Elisabeth W. Andersen Peder Bacher, Lasse E. Christiansen. "Introduction to Statistics at DTU". 2018 Fall
