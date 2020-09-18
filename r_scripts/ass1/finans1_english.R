@@ -8,7 +8,7 @@
 ## (i.e. no backslash).
 setwd("ass1")
 getwd()
-
+setwd("/home/arm/Projects/statistics/r_scripts/ass1")
 ###########################################################################
 ## Read data into R
 
@@ -108,6 +108,8 @@ summary(D$SPY)
 
 ###########################################################################
 ## qq-plot for model validation
+
+qqunif(D$AGG,type="unif", logscale=FALSE)
 
 ## qq-plot of AGG's weekly returns
 qqnorm(D$AGG)
