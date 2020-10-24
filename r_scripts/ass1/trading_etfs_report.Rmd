@@ -2,7 +2,7 @@
 title: 'Project 1: Trading ETFs'
 subtitle: "02323 Introduction to Statistics - Fall 2020"
 author: "Armandas Rokas(s185144)"
-date: "9/16/2020"
+date: "16/10/2020"
 output:
   pdf_document:
     toc: yes
@@ -10,9 +10,6 @@ output:
 ---
 \pagenumbering{gobble} 
 
-<!-- TODO
-* Set figure captions (Nice to have)
---> 
 
 \pagebreak
 ```{r setup, include=FALSE}
@@ -33,27 +30,27 @@ D <- D[ ,c("t","AGG","VAW","IWN","SPY")]
 
 - Quantitative data
 - Date of first observation: `2006-05-05`, Date of the last observation: `2015-05-08`
-```{r}
+```{r include=FALSE}
 D$t <- as.Date(D$t)
 summary(D$t)
 ```
 - The number of observations: 454
-```{R}
+```{R include=FALSE}
 nrow(D)
 ```
-- There are no missing values:
+- There are no missing values.
 
-```{R}
+```{R include=FALSE}
 sum(is.na(D))
 ```
 
 
 
-### b) A density histogram of the weekly return from the EFT AGG
+### b) A density histogram of the weekly return from AGG
 
 <!--But why density? Is it not more clear with frequency?-->
 
-![](images/histogram_agg.png)
+![A density histogram of the weekly return from AGG](images/histogram_agg.png)
 
 - The empirical density is symmetrical, because both tails seems to have similar lengths. 
 - The returns can be both positive and negative.
@@ -62,30 +59,41 @@ sum(is.na(D))
 <!-- Skal det begrundes mere? -->
 
 
+\pagebreak
 
-### c) Plots illustrating the weekly return over time
+### c) Plots illustrating the weekly returns over time
 
-![](images/returns_AGG.png)
+- From the plots below the level of returns seem to change over time. The most significant different periods are around 2008-2010 and 2011-2012 where level of return is increased. 
+- AGG stands out from others by having a smaller variance. 
+ 
 
-![](images/returns_VAW.png)
+![AGG weekly returns](images/returns_AGG.png)
 
-![](images/return_IWN.png)
+\pagebreak
 
-![](images/returns_SPY.png)
+![VAW weekly returns](images/returns_VAW.png)
 
-- The level of return seem to change over time. The most significant different periods are around 2008-2010 and 2011-2012 where level of return is increased. 
--  AGG stands out from others by having a smaller variance. 
+![IWN weekly returns](images/return_IWN.png)
+\pagebreak
+
+![SPY weekly returns](images/returns_SPY.png)
 
 
+\pagebreak
+\newpage
 
-### d) A box plot of the weekly returns by ETF
 
-![](images/returns_box.png)
+### d) A box plot of the weekly returns 
 
-- There seems to be a difference between the distributions in the way that VAW is more skewed than others.  VAW has left-skewed distribution, because the left tail is longer than the right tail. Others EFTs seems to have less skewed distributions.
+- From the box plot below there seems to be a difference between the distributions in the way that VAW is more skewed than others.  VAW has left-skewed distribution, because the left tail is longer than the right tail. Others EFTs seems to have less skewed distributions.
 - Moreover AGG has much narrower IQR  than other ETFs
 - The extreme observations (outside a distance of $1.5*\text{IQR}$) here are plotted individually, so yes there are plenty of these. 
 
+
+![A box plot of the weekly returns of AGG, VAW, IWN and SPY](images/returns_box.png)
+
+ \pagebreak
+ 
 <!--  and the mean lies to the left of the median. VAW. Mean is 0.001794 and median 0.004798. So that the mean lies to the left of the median. That means that is left-skewed distribution. -->
 
 
@@ -104,6 +112,8 @@ sum(is.na(D))
 
 - One could gain information about differences between the means and  the medians, so it is easier to determine if data is skewed. 
 
+\pagebreak
+
 ## Statistical analysis
 
 ### f) Statistical models
@@ -120,27 +130,31 @@ SPY \sim N(0.001360105,0.02478601^2 ) \\
 \end{aligned}
 $$
 
-- In order to perform normality validation there are used Wally plots. 
-- The wally plot of AGG:
-
-![](images/wally_AGG.png)
-
-- The wally plot of VAW:
-
-![](images/wally_VAW.png)
-
-- The wally plot of IWN:
-
-![](images/wally_IWN.png)
-
-- The wally plot of SPY:
-
-![](images/wally_SPY.png)
+- In order to perform normality validation there are produced Wally plots: 
 
 
-- It seems from wally plots that the weekly returns of these four ETFs don't follow a normal distribution, but it is more similar to the heavy-tailed distribution[^HEAVYTAILED]. 
+![The wally plot of AGG](images/wally_AGG.png)
+
+\pagebreak
+
+
+![The wally plot of VAW](images/wally_VAW.png)
+
+\pagebreak
+
+
+![The wally plot of IWN](images/wally_IWN.png)
+
+
+\pagebreak
+
+![The wally plot of SPY](images/wally_SPY.png)
+
+
+- It seems from wally plots below that the weekly returns of these four ETFs don't follow a normal distribution, because the data for all ETFs deviates more from the qqline than the simulated data in the wally plots. It is however more similar to the heavy-tailed distribution[^HEAVYTAILED]. 
 - When we cannot assume a normal distribution comes CLT to rescue, because CLT states that "The underlying distribution of a sample can be disregarded when carrying out inference related to the the mean" [^DTU] (p. 136). This means that we can still define CIs and make Hypothesis tests for the mean based on the standard normal quantiles/t-quantiles, although the distribution of weekly returns doesn't follows a normal distribution, because the sample means of repeatedly taken large enough samples ($n>=30$) follows normal distribution.
 - Moreover, "The t-test assumes that the means of the different samples are normally distributed; it does not assume that the population is normally distributed". [^TTEST]
+
 
 <!--It is because the data for all ETFs deviates more from the qqline(a straight line through the 1st and 3rd quantiles) than the simulated data in the wally plots. It seems though that these follows --> 
 <!--Cauchy-->
@@ -160,11 +174,10 @@ $$
 | IWN  | -0.001765174      | 0.004140533       |
 | SPY  | -0.000925960      | 0.003646171       |
 
-#### The formulas 
 ##### First define t-quantile, which is going to be used in the formulas
 - $t_{0.975}$ 0.975 t-quantile with n-1=434 degress of freedom equals to 1.965215:
 
-```{r}
+```{r include=FALSE}
 qt(0.975,454-1)
 ```
 
@@ -179,7 +192,9 @@ $$
 \end{aligned}
 $$
 
-```{R}
+The same results could be produced by `t.test`:
+
+```{R echo=FALSE}
 t.test(D$AGG, conf.level=0.95)$conf.int
 ```
 
@@ -192,7 +207,9 @@ $$
 \end{aligned}
 $$
 
-```{R}
+The same results could be produced by `t.test`:
+
+```{R echo=FALSE}
 t.test(D$VAW, conf.level=0.95)$conf.int
 ```
 
@@ -203,8 +220,9 @@ $$
 \bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} =0.001187679 \pm 1.965215* \frac{0.03201547}{\sqrt{454}} = \\= 0.001187679  \pm 0.002952853  = [-0.001765174,  0.004140533 ]
 \end{aligned}
 $$
+The same results could be produced by `t.test`:
 
-```{R}
+```{R echo=FALSE}
 t.test(D$IWN, conf.level=0.95)$conf.int
 ```
 
@@ -216,7 +234,9 @@ $$
 \end{aligned}
 $$
 
-```{R}
+The same results could be produced by `t.test`: 
+
+```{R echo=FALSE}
 t.test(D$SPY, conf.level=0.95)$conf.int
 ```
 
@@ -239,28 +259,35 @@ $$
 
 **By using Method 3.36**
 
-**1.**  
+**1. The test statistics: **  
 $$
 t_{obs}= \frac{\bar{x}-\mu_{0}}{s/\sqrt{n}}= \frac{0.000265757}{0.005975841/\sqrt{454}} = 0.2983265
 $$
 
-**2.** 
+**2. p-value** 
 $$
-\text{p-value}= 2*P(T>|t_{obs}|) = 0.3438511
+\text{p-value}= 2*P(T>|t_{obs}|) = 2*0.1719256 =0.3438511
 $$
+- With the degree of freedom $454-1= 453$
 
-```r
-> tobsAGG <- (meanAGG)/(sAGG/sqrt(454))
-> 2*(1-pt(tobsAGG, df=454-1))
-[1] 0.3438511
+```{R include=FALSE}
+#tobsAGG <- (meanAGG)/(sAGG/sqrt(454))
+#2*(1-pt(tobsAGG, df=454-1))
 ```
 
 **3.  Conclusion:**
 
 $\text{p-value}$ (0.3438511) is more than $\alpha$ (0.05), so we can accept $H_{0}$.  So the mean weekly returns from AGG does not deviate significantly from the returns obtained by saving money under the pillow.
 
- The same conclusion could have been reached using the CI, because it includes 0, which means that 0 is accepted value at 95% significant level. 
+ The same conclusion could have been reached using the CI, because it includes 0, which means that 0 is accepted value at 95% significant level.
+ 
+**t.test** 
 
+The same p-value could be produced by `t.test`:
+
+```{R echo=FALSE}
+t.test(D$AGG, mu=0)
+```
 
 
 ### i) Welch t-test for compering AGG and VEW 
@@ -280,63 +307,53 @@ $$
 
 
 
-1. 
+**1. The test statistics** 
 
 $$
 \begin{aligned}
-t_{obs}= \frac{(\bar{x}_1-\bar{x}_2)-\delta_0}{\sqrt{s_1^2/n_1+s^2_2/n_2}}= -1.973387\\
-v = \frac{(\frac{s^2_1}{n_1}+\frac{s^2_2}{n_2})^2}{\frac{(s_1^2/n_1)^2}{n_1-1}+\frac{(s_2^2/n_2)^2}{n_2-1}}= 54.38591
+t_{obs}= \frac{(\bar{x}_1-\bar{x}_2)-\delta_0}{\sqrt{s_1^2/n_1+s^2_2/n_2}}= -1.973387
 \end{aligned}
 $$
 
 
-
-```r
-> tobsAGGVAW <- (meanAGG-meanVAW)/(sqrt((sAGG^2/454)+(sVAW^2/454)))
-[1] -0.8901926
-> vAGGVAW <- ((sAGG^2/454)+(sVAW^2/454))^2/
-+   (((sAGG^2/454)^2/(454-1))+((sVAW^2/454)^2/(454-1)))
-[1] 477.8312
-
-
+```{R include=FALSE}
+#tobsAGGVAW <- (meanAGG-meanVAW)/(sqrt((sAGG^2/454)+(sVAW^2/454)))
+# vAGGVAW <- ((sAGG^2/454)+(sVAW^2/454))^2/(((sAGG^2/454)^2/(454-1))+((sVAW^2/454)^2/(454-1)))
 ```
 
 
 
-2. 
+**2. p-value** 
 
 $$
-\text{p-value} = 0.3738104
+\text{p-value} = 2*P(T>|t_{obs}|) = 2 * 0.1869052= 0.3738104
 $$
 
-```R
-> 2*(1-pt(abs(tobsAGGVAW), df=vAGGVAW))
-[1] 0.3738104
+
+With the degree of freedom:
+
+$$
+\begin{aligned}
+v = \frac{(\frac{s^2_1}{n_1}+\frac{s^2_2}{n_2})^2}{\frac{(s_1^2/n_1)^2}{n_1-1}+\frac{(s_2^2/n_2)^2}{n_2-1}}= 54.38591
+\end{aligned}
+$$
+
+```{R include=FALSE}
+# 2*(1-pt(abs(tobsAGGVAW), df=vAGGVAW))
 ```
 
-3. Conclusion
+**3. Conclusion**
 
 On a 5% level we cannot conclude a significant difference in the mean weekly return differs, because the calculated $\text{p-value}=0.3738104 > \alpha=0.05$  
 
 
+**t.test** 
 
-```R
-> t.test(D$VAW, D$AGG)
+The same p-value could be produced by `t.test`:
 
-	Welch Two Sample t-test
-
-data:  D$VAW and D$AGG
-t = 0.89019, df = 477.83, p-value = 0.3738
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -0.001844827  0.004900893
-sample estimates:
-  mean of x   mean of y 
-0.001793790 0.000265757 
+```{R echo=FALSE}
+t.test(D$VAW, D$AGG)
 ```
-
-
-
 
 
 ### j) Conclusion from CIs
@@ -349,44 +366,31 @@ According to Remark 3.59, if CIs do overlap (like in this case), then the same c
 
 <!--JEg er lidt forvirrede her omkring, hvilke notation skal jeg bruge her? Side 275 eller  Definition 1.18-->
 
+- Covariance between VAW and IWN: 
 
 $$
 s_{VAWIWN} = \frac{1}{n-1}\sum_{i=1}^{n}{(VAW_{i}-\bar{VAW})(IWN_{i}-\bar{IWN})} = 0.0009838237
 $$
 
-
-```R
-> covVAW_IWN <- sum((D$VAW-meanVAW)*(D$IWN-meanIWN))/453
-[1] 0.0009838237
-```
-
+- Correlation between VAW and IWN:
 
 $$
 r = \frac{s_{VAWIWN}}{s_{VAW}*s_{IWN}} = 0.8516407
 $$
 
-```r
-> corrVAW_IWN <-covVAW_IWN / (sqrt(varVAW)*sqrt(varIWN))
-[1] 0.8516407
+
+- The calculated correlation is the same as in the table produced with `cor` below. 
+
+```{R echo=FALSE}
+cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")
 ```
 
-- The calculated correlation is the same as in the table below.
+- Lastly, the scatter plot below illustrates as expected moderately strong linear relationship, which has a positive general trend.
 
-```R
-> cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")
-           AGG        VAW        IWN        SPY
-AGG  1.0000000 -0.1975679 -0.1352621 -0.2187164
-VAW -0.1975679  1.0000000  0.8516407  0.8863608
-IWN -0.1352621  0.8516407  1.0000000  0.9100966
-SPY -0.2187164  0.8863608  0.9100966  1.0000000
-```
+![The scatter plot between IWN and VAW](images/corr_VAW_IWN.png)
 
-- The scatter plot below illustrates as expected moderately strong linear relationship, which has a positive general trend.
-
-![](images/corr_VAW_IWN.png)
-
-```R
-plot(D$VAW, D$IWN, xlab="VAW", ylab="IWN")
+```{R include=FALSE} 
+# plot(D$VAW, D$IWN, xlab="VAW", ylab="IWN")
 ```
 
 

@@ -100,6 +100,10 @@ summary(D$VAW)
 summary(D$IWN)
 summary(D$SPY)
 
+library(Hmisc)
+des <- Hmisc::describe(D)
+print(des)
+
 ## etc.
 ##
 ## The argument 'na.rm=TRUE' ensures that the statistic is
@@ -122,8 +126,10 @@ qqwrap <- function(x, y, ...){
   qqnorm(stdy, main="", ...)
   qqline(stdy)}
 
+wallyplot(D$AGG, FUN=qqwrap, ylim=c(-3,3))
+wallyplot(D$VAW, FUN=qqwrap, ylim=c(-3,3))
+wallyplot(D$IWN, FUN=qqwrap, ylim=c(-3,3))
 wallyplot(D$SPY, FUN=qqwrap, ylim=c(-3,3))
-
 
 logAGG <- log(D$AGG)
 ###########################################################################

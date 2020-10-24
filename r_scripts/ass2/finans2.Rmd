@@ -1,0 +1,395 @@
+---
+title: 'Project 2: Trading ETFs'
+subtitle: "02323 Introduction to Statistics - Fall 2020"
+author: "Armandas Rokas(s185144)"
+date: "-/-/2020"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+---
+\definecolor{hightlightColor}{HTML}{FFFF66}
+\pagenumbering{gobble} 
+
+
+
+\pagebreak
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car)
+setwd("/home/arm/Projects/statistics/r_scripts/ass2")
+D <- read.table("finans2_data.csv", header=TRUE, sep=";", as.is=TRUE)
+D_test <- subset(D, ETF %in% c("AGG", "VAW", "IWN", "SPY"))
+D_model <- subset(D, !(ETF %in% c("AGG","VAW","IWN","SPY")))
+```
+
+\pagebreak
+\pagenumbering{arabic}
+
+# Statistical analysis
+
+## a) Descriptive analysis
+
+### Summary statistics
+
+
+In the table 1 below there is summarized some important statistics about Geo.mean, Volatility and maxTuW variables Firstly, we can see that all variables has 95 observations out of 95 possible, that means that there is no missing values. Secondly the medians and the means of variables are a quite different, especially  for maxTuW, which could mean that there are some skewness in the data, but this will be checked again in the plots below. Lastly we can conclude that the standart deviation of muxTuW is quite large compared with its IQR, so it can tell us that there are a number of outliers in the dataset, because IQR is resistant to outliers, but the standard deviation is not.
+
+<!--That is, in a normally distributed data a standard deviation tends to be smaller numerically than IQR, but here we can see the opposite. -->
+
+
+|                             | Geo.mean| Volatility| maxTuW         |
+| --------------------------- | ----------- | ----------- | ----------- |
+| **Number of obs.** ($n$)    |    95       | 95         | 95            |
+| **Sample mean** ($\bar{x}$) |     0.0769  | 3.06    |  307.3      |
+| **Sample variance** ($s^2$) |  0.006539513 | 0.7727149  | 1829.061 |
+| **Std. dev.** ($s$)         |  0.08086726 |  0.8790421 |   42.76752  |
+| **Lower quartile**($Q_1$)   |  0.02871  | 2.588   |  309.0  |
+| **Median**($Q_2$)           |  0.08274  | 3.026    | 324.0     |
+| **Upper quartile**($Q_3$)   |  0.13438  | 3.675    | 327.0      |
+Table: Summary statistics
+
+  
+
+
+### Description of the plots 
+
+From scattersplots in Figure \ref{fig:scatter} it seems that there is negative correlation between Geo.mean and Volatility, which means that Geo.mean and Volatility are related to each other, where Geo.mean tends to be higher when Volatility is low. The same couldn't be said about relationship between Geo.mean and maxTuW.  Although there is some negative correlation too between these values, where Geo.mean increases when maxTuW period gets shorter, the relation looks quite flat.
+
+The historgrams in Figure \ref{fig:hist} can tell us that all three variables is skewed. However the Geo.mean variable is the least skewed, but still has some left-skewness. Most of Geo.mean values lie between -0.1 and 0.2. Volatility is right-skewed and the most of values are gathered between 2 and 5. maxTuw is left-skewed, where most of maxTuW values are between 300 and 350.
+
+From the boxplots in Figure  \ref{fig:boxplot}  we can say that maxTuW have few more outliers than Geo.mean and Volatility. Moreover the skewness can also be seen here too, where medians aren't in the middle of IQR. 
+
+
+
+```{R scatter, echo=FALSE, fig.cap="\\label{fig:scatter}The scatter plots of Geo.mean versus Volatility and Geomean versus maxTuW" ,fig.height=9, fig.width=9}
+## fig.cap="The scatter plots of Geo.mean versus Volatility and Geomean versus maxTuW"
+par(mfrow=c(2,1))
+plot(D$Geo.mean, D$Volatility, xlab="Geo.mean", ylab="Volatility", main="Geo.mean versus Volatility")
+plot(D$Geo.mean, D$maxTuW, xlab="Geo.mean", ylab="maxTuW", main="Geo.mean versus maxTuW")
+```
+
+
+
+\newpage 
+
+```{R echo=FALSE, fig.cap="The scatter plot of Geo.mean versus maxTuW"}
+#plot(D$Geo.mean, D$maxTuW, xlab="Geo.mean", ylab="maxTuW")
+```
+
+\newpage
+
+
+```{R echo=FALSE, fig.cap="\\label{fig:hist} The histograms of Geo.mean, Volatility and maxTuW" ,fig.height=9, fig.width=9}
+par(mfrow=c(2,2))
+hist(D$Geo.mean, xlab="Geo.mean",main="Geo.mean" , prob=TRUE)
+hist(D$Volatility, xlab="Volatility",main="Volatility" , prob=TRUE)
+hist(D$maxTuW, xlab="maxTuW",main="maxTuW" , prob=TRUE)
+```
+
+\newpage
+
+```{R echo=FALSE, fig.cap="\\label{fig:boxplot} The boxplots of Geo.mean, Volatility and maxTuW",fig.height=9, fig.width=9}
+par(mfrow=c(2,2))
+boxplot(D$Geo.mean, ylab="Geo.mean", main="Geo.mean")
+text(1.3, quantile(D$Geo.mean), c("Min.", "Q1", "Median", "Q3", "Max."))
+boxplot(D$Volatility, ylab="Volatility", main="Volatility")
+text(1.3, quantile(D$Volatility), c("Min.", "Q1", "Median", "Q3", "Max."))
+boxplot(D$maxTuW, ylab="maxTuW", main="maxTuW")
+text(1.4, quantile(D$maxTuW), c("Min.", "Q1", "Q3/Median", "", "Max."))
+```
+
+\newpage
+
+
+## b) A multiple linear regression model
+
+
+$$
+Y_i = \beta_0 + \beta_1x_{i,1} + \beta_2x_{2,i} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)
+$$
+A model states that the geometric avarge rate of return is a function of volatility and maxTuW, where $x_1$ is the volatility and $x_2$ is the maxTuW. Here we assume that the residuals($\epsilon_i$) are independent and identically normally distributed random variables with zero mean and some unknown constant variance.       
+
+## c) Estimate the parameters of the model
+
+The summary of the model:
+
+```{R echo=FALSE}
+#vola <- sin(D_model$Volatility)
+#fit <- lm(Geo.mean ~ vola + maxTuW, data = D_model)
+
+fit <- lm(Geo.mean ~ Volatility + maxTuW, data = D_model)
+
+summary(fit)
+
+# The observed values
+#plot(D_model$Volatility,D_model$Geo.mean)
+# Add a regression line
+#lines(D_model$Volatility, fitted(fit))
+```
+
+
+From the R output above we can conclude:
+
+$$
+\begin{aligned}
+\hat\beta_0=0.2528394 \\
+\hat\beta_1= -0.0351310 \\
+\hat\beta_2= -0.0002203 \\
+\hat\sigma^2= 0.07582^2 \\
+\hat\sigma_{\beta_0} = 0.0584827 \\
+\hat\sigma_{\beta_1} = 0.0097229 \\
+\hat\sigma_{\beta_2} = 0.0001910 \\
+df = n-(p+1) = 91 -(2+1) = 88 \\
+r^2 = 0.1704
+\end{aligned}
+$$
+
+
+$\hat\beta_0$ is the estimated intercept. The intercept theoretically means that when volatility is 0 and maxTuX is 0 than Geam.mean would be 0.25 with some error.
+
+$\hat\beta_1$ is the estimated effect of volatility and $\hat\beta_2$ is the estimated effect of maxTuW. The effect of volatility is accounted for the effect of maxTuW and viva verca. The negative effect of volatility and maxTuW means that if volatility or maxTuW increases, so Geo.mean decreases, or a lower volatility and a lower maxTuX gives higher Geo.mean.   
+
+$\hat\sigma_{\beta_0}$, $\hat\sigma_{\beta_1}$ and $\hat\sigma_{\beta_1}$ are the estimated standard estimations of respectively $\hat\beta_0$, $\hat\beta_1$ and $\hat\beta_2$.
+
+$df$ is is the degree of freedom used for the esimated residual variance $\hat\sigma^2$
+
+$r^2$ is the explained variation.
+
+## d) Model validation
+
+
+### Normality 
+
+From Figure \ref{fig:qqplot} it seems that there is moderate but acceptable departure from normality. Moreover from both plots in the Figure \ref{fig:residuals_fitted} below it doesn't seem that the residuals (left plot) or the observed values (right plot) and the fitted values are related with a clear pattern. All this suggests that the normality of residuals assumption is met. 
+
+<!--may not be normality distributed. So it can be that the normality assumption doesn't hold for this model. --> 
+
+
+
+```{R echo=FALSE, fig.cap="\\label{fig:qqplot} Normal QQ-plot of the residuals", fig.height=4, fig.width=4}
+#qqPlot(fit, simulate = TRUE)
+# Normal QQ-plot of the residuals
+qqnorm(fit$residuals, ylab = "Residuals", xlab = "Z-scores",  main = "")
+qqline(fit$residuals)
+#plot(fit, which=c(2))
+```
+
+\pagebreak
+
+### The constant variance (homoscedasticity)
+
+From both plots in the Figure \ref{fig:residuals_fitted} below it doesn't seem that there is any systematic behaviour in the variance range, suggesting that the constant variance assumption is met.  
+
+ 
+
+<!--Maybe Upside Down U-shaped Parabola. 
+- The constant variance assumption 
+  - may be checked by plotting the residuals as a function of the fitted values.  \ref{fig:residuals_fitted}
+  - should not show a systematic behaviour, this means that the range should be constant (maybe it is possible to add a mean line on the plot)
+-->
+
+```{R echo=FALSE, fig.cap="\\label{fig:residuals_fitted} Residuals(left) and observations(right) against fitted values", fig.height=4, fig.width=8}
+par(mfrow=c(1,2))
+# Residuals against fitted values
+plot(fit$fitted.values, fit$residuals, main="Residuals against fitted values",xlab = "Fitted values", ylab = "Residuals")
+# Observations against fitted values
+plot(fit$fitted.values, D_model$Geo.mean, main="Observations against fitted values", xlab = "Fitted values",ylab = "Geom. average rate of return")
+#lines(lowess(fit$fitted.values, fit$residuals), col = "red")
+#plot(fit, which=c(1))
+```
+
+
+
+However, in order to be sure `ncvTest` is performed, which is found in `car` package. The function performs a hypothesis test, where "the null hypothesis of constant error variance against alternative that the error variance changes with the level of the response(fitted values)"[^ncvTest].  The output is below:
+
+[^ncvTest]:  https://www.rdocumentation.org/packages/car/versions/3.0-10/topics/ncvTest
+
+```{R echo=FALSE}
+
+ncvTest(fit)
+##spreadLevelPlot(fit)
+```
+
+The p-values is 0.4873, so we can accept the null hypothesis of the constant variance assumption. 
+
+\pagebreak
+### Linearity
+
+Here we will validate a linear relationship between the dependent variable and independent variables. From Figure \ref{fig:residuals_explanatory} it seems that there is a flat structure, suggesting a linear relationship between the geometric avarge rate of return and two explonatory variables, namely the volatility and the maxTuW. 
+
+<!--
+- Residuals vs each individual x'es in order to check wether x lineary influencing y. There should be a flat structure. If not flat, maybe there is some non linear relationship is going on. Kan man kalde "omvendt parabel" ? "It does not look linear. It seems that it afvige from linear, but there is not systematic dependance. 
+-->
+
+
+
+
+
+
+```{R echo=FALSE, fig.cap="\\label{fig:residuals_explanatory} Residuals against each of the explanatory variables" , fig.height=4.5, fig.width=9}
+# Residuals against each of the explanatory variables
+par(mfrow=c(1,2))
+plot(D_model$Volatility, fit$residuals, 
+        xlab = "Volatility", ylab = "Residuals")
+#lines(lowess(D_model$Volatility, fit$residuals), col = "red")
+plot(D_model$maxTuW, fit$residuals, 
+        xlab = "maxTuW", ylab = "Residuals")
+#lines(lowess(D_model$maxTuW, fit$residuals), col = "red")
+```
+
+
+### Independance
+
+\colorbox{hightlightColor}{Skal jeg validere for independance?}
+
+
+Remark 5.29 says that "In general independence should also be chacked, while there are ways to do this we will not discuss them here", so I assume that it is not required to check for independance in this project.
+
+```{R echo=FALSE, fig.cap="\\label{fig:fitted_obs} Obeservations against fitted values" , fig.height=4, fig.width=4}
+# Observations against fitted values
+#plot(fit$fitted.values, D_model$Geo.mean, xlab = "Fitted values",     
+#       ylab = "Geom. average rate of return")
+
+```
+
+
+```{R echo=FALSE, fig.height=9, fig.width=9}
+#par(mfrow=c(2,2))
+#plot(fit)
+
+#crPlots(fit)
+```
+
+\pagebreak
+
+## e) 95% confidence interval for the volatility coefficient
+
+
+$$
+\hat\beta_1 \pm t_{1-0.05/2} \hat\sigma_{\beta_1} = -0.0351310 \pm  1.98729 * 0.0097229 = [-0.05445322, -0.01580878]
+$$
+Where t-distribution is with the degree of freedom of: $n-(p+1) = 91 -(2+1) = 88$
+
+
+The same results are as well found in R, which can be seen in the table \ref{tab:ci} below: 
+```{R echo=FALSE}
+confint_beta1 <- confint(fit, level = 0.95)
+knitr::kable(confint_beta1,
+             caption = "\\label{tab:ci} Confidence intervals for the model coefficients")
+```
+
+## f) Hypothesis testing
+
+**1. The null hypothesis and the alternative hypothesis**
+
+$$
+\begin{aligned}
+H_{0,1}: \beta_1 = -0.06 \\
+H_{1,1}: \beta_1 \ne -0.06
+\end{aligned}
+$$
+
+**2. The test statistics **
+
+$$
+t_{obs, \beta_1} = \frac{\hat\beta_1-\beta_{0,1}}{\hat\sigma_{\beta_1}} = \frac{-0.0351310-(-0.06)}{0.0097229} =  2.557776
+$$
+
+**3. The edvidence against the null the null hypothesis**
+
+$$
+\text{p-value}_1= 2*P(T>|t_{obs, \beta_1}|)= 2* 0.006122957 = 0.01224591
+$$
+Where t-distribution is with the degree of freedom of: $n-(p+1) = 91 -(2+1) = 88$
+
+**4. Conclusion**
+
+The null hypothesis must be reject, because the p-value is less than 0.05. So it is quite unlikely that $\beta_1 = -0.06$ 
+
+\pagebreak
+
+## g) Backwards selection 
+
+In the CI table in the e) exercise we can see that maxTuW is not significant(on a 5% level), because the confidence interval includes 0. It also has  a high p-value(0.251795.), which is found in the model summary in the c) exercise. So it makes sense to remove maxTuW from the model.
+
+The summary of the newly estimated model is below:
+
+
+```{R echo=FALSE}
+#vola <- sin(D_model$Volatility)
+#fit <- lm(Geo.mean ~ vola + maxTuW, data = D_model)
+
+fit <- lm(Geo.mean ~ Volatility, data = D_model)
+
+summary(fit)
+```
+
+So the final model,  where $x_1$ is the ¨volatility:
+$$
+Y_i = \beta_0 + \beta_1x_{i} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)
+$$
+
+
+
+And estimates of the parameters:
+
+$$
+\begin{aligned}
+\hat\beta_0=0.19486 \\
+\hat\beta_1= -0.03824 \\
+\hat\sigma^2= 0.07596^2 \\
+\hat\sigma_{\beta_0} = 0.02996\\
+\hat\sigma_{\beta_1} = 0.00936 \\
+df = n-(p+1) = 91 -(1+1) = 89 \\
+r^2 = 0.1579
+\end{aligned}
+$$
+
+
+\pagebreak
+
+## h) Prediction interval
+
+
+In the Table \ref{tab:observed_predictions} and from the scatter plot in Figure \ref{fig:predict} we can see that the prediction interval covered all four test ETF's, exactly SPY, IWN, AGG and VAW. The biggest difference between the true value and the predicted is for AGG, which has very unusually low  volatility(0.59758), which may be an explanation for this large deviation from the true value. So this means that the model may predict better, when volatility is around 3, which is also close to the sample mean of the volatility in our model data. However as long as all these values are inside the prediction interval, so we can assume that the model predicts values quite correct. 
+
+  
+
+
+```{R echo=FALSE}
+# Predictions and 95% prediction intervals
+pred <- predict(fit, newdata = D_test, interval = "prediction", level = 0.95)
+
+
+# Observed values and predictions
+observed_predictions <- cbind(id = D_test$ETF, Geo.mean = D_test$Geo.mean, volatility=D_test$Volatility, pred)
+observed_predictions <- cbind(observed_predictions,diff_obs_fit= as.numeric(observed_predictions[,2]) - as.numeric(observed_predictions[,3]) )
+
+observed_predictions[,2] <- round( as.numeric(observed_predictions[,2]),5)
+observed_predictions[,3] <- round( as.numeric(observed_predictions[,3]),5) 
+observed_predictions[,4] <- round( as.numeric(observed_predictions[,4]),5) 
+observed_predictions[,5] <- round( as.numeric(observed_predictions[,5]),5) 
+observed_predictions[,6] <- round( as.numeric(observed_predictions[,6]),5) 
+observed_predictions[,6] <- round( as.numeric(observed_predictions[,6]),5) 
+observed_predictions[,7] <- round( as.numeric(observed_predictions[,7]),5) 
+
+
+  
+knitr::kable(observed_predictions,
+             caption = " \\label{tab:observed_predictions} Observed values and prediction")
+
+```
+
+```{R echo=FALSE, fig.cap="\\label{fig:predict} Residuals against each of the explanatory variables"}
+
+
+plot(D_test$Volatility, D_test$Geo.mean, pch=19, col=8, xlab="Volatility", ylab="Geo.mean", ylim=c(-0.05,0.35))
+points(D_test$Volatility, pred[,"fit"], pch=4, col=8)
+lines(D_test$Volatility, pred[,"lwr"], col="grey", lty=2)
+lines(D_test$Volatility, pred[,"upr"], col="grey", lty=2)
+legend("topright", c("Observed", "Predicted", "Prediction interval"), pch=c(19,4,-1), lty=c(0,0,2), col=c(8,8), cex=0.7)
+#legend("topleft", c("Prediction interval"),  lty=0, cex=0.7,col="grey" )
+
+```
+
