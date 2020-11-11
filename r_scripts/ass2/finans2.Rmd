@@ -2,7 +2,7 @@
 title: 'Project 2: Trading ETFs'
 subtitle: "02323 Introduction to Statistics - Fall 2020"
 author: "Armandas Rokas(s185144)"
-date: "-/-/2020"
+date: "11/11/2020"
 output:
   pdf_document:
     toc: yes
@@ -33,7 +33,25 @@ D_model <- subset(D, !(ETF %in% c("AGG","VAW","IWN","SPY")))
 ### Summary statistics
 
 
-In the table 1 below there is summarized some important statistics about Geo.mean, Volatility and maxTuW variables Firstly, we can see that all variables has 95 observations out of 95 possible, that means that there is no missing values. Secondly the medians and the means of variables are a quite different, especially  for maxTuW, which could mean that there are some skewness in the data, but this will be checked again in the plots below. Lastly we can conclude that the standart deviation of muxTuW is quite large compared with its IQR, so it can tell us that there are a number of outliers in the dataset, because IQR is resistant to outliers, but the standard deviation is not.
+In the Table 1 below there are summarized some important statistics about `Geo.mean`, `Volatility` and `maxTuW` variables. Firstly, we can see that all variables have 95 observations out of 95 possible, that means all 95 ETF's have observations for `Geo.mean`, `Volatility` and `maxTuW`. 
+
+Secondly the medians and the means of variables are a quite different, this means that:
+
+- `Geo.mean` is left-skewed, because the mean of `Geo.mean`(0.0769) is less than(left of) the median of `Geo.mean`(0.08274).
+- `Volatility` is right-skewed, because the mean of `Volatility`(3.06) is more than(right of) the median of `Volatility`(3.026).
+- `maxTuW` is left-skewed, because the mean of `maxTuW`(307.3) is less than the median of `maxTuW` is (324.0). 
+
+<!--So in skewed data, the tail region may act as an outlier for the statistical model and we know that outliers adversely affect the model’s performance especially regression-based models. https://towardsdatascience.com/skewed-data-a-problem-to-your-statistical-model-9a6b5bb74e37#:~:text=A%20data%20is%20called%20as,as%20on%20the%20right%20side. --> 
+
+
+ Lastly we can also see that the standard deviation of `muxTuW` is more than 2 times larger than its IQR, compared to `Volatility` and `Geo.mean`, where the standard deviations is smaller than their IQR's. This can also be related to extreme outliers because extreme outliers makes standard deviation larger, but don't affect IQR, which actually is resistant to outliers.[^wiki]
+ 
+ [^wiki]: [Wiki](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule#:~:text=For%20an%20approximately%20normal%20data,deviations%20account%20for%20about%2099.7%25.)
+
+
+<!-- https://www.asc.ohio-state.edu/calder.13//stat528/Lectures/lecture3_6slides.PDF -->
+
+<!-- https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule#:~:text=For%20an%20approximately%20normal%20data,deviations%20account%20for%20about%2099.7%25. -->
 
 <!--That is, in a normally distributed data a standard deviation tends to be smaller numerically than IQR, but here we can see the opposite. -->
 
@@ -49,17 +67,21 @@ In the table 1 below there is summarized some important statistics about Geo.mea
 | **Upper quartile**($Q_3$)   |  0.13438  | 3.675    | 327.0      |
 Table: Summary statistics
 
-  
-
+<!-- IQR is wider  -->  
+<!--
+IQR range that the middle 50% of the data lies), while std specifies dispersion using all the data, to where 68% of the data belong
+https://stats.stackexchange.com/questions/439020/can-iqr-ever-be-larger-than-standard-deviation -->
 
 ### Description of the plots 
 
-From scattersplots in Figure \ref{fig:scatter} it seems that there is negative correlation between Geo.mean and Volatility, which means that Geo.mean and Volatility are related to each other, where Geo.mean tends to be higher when Volatility is low. The same couldn't be said about relationship between Geo.mean and maxTuW.  Although there is some negative correlation too between these values, where Geo.mean increases when maxTuW period gets shorter, the relation looks quite flat.
 
-The historgrams in Figure \ref{fig:hist} can tell us that all three variables is skewed. However the Geo.mean variable is the least skewed, but still has some left-skewness. Most of Geo.mean values lie between -0.1 and 0.2. Volatility is right-skewed and the most of values are gathered between 2 and 5. maxTuw is left-skewed, where most of maxTuW values are between 300 and 350.
+**From scattersplots in Figure \ref{fig:scatter}** it seems that there is low linear relationship between `Geo.mean` and `Volatility`, which has a negative trend, where as `Volatility` decreases, `Geo.mean` increases. On the other hand it seems that there is only little if any linear relationship between `Geo.mean` and `maxTuW`, which has a negative trend, where as `maxTuW` decreases, `Geo.mean` increases. 
 
-From the boxplots in Figure  \ref{fig:boxplot}  we can say that maxTuW have few more outliers than Geo.mean and Volatility. Moreover the skewness can also be seen here too, where medians aren't in the middle of IQR. 
+**The histograms in Figure \ref{fig:hist}** underpin again that all three variables is skewed as described above. Moreover we can see that the most of `Geo.mean` values lie between -0.1 and 0.2, the most of `Volatility` values are between 2 and 5 and the most of `maxTuW` values lie between 300 and 350.
 
+**From the box plots in Figure \ref{fig:boxplot}**  we can say that `maxTuW` have the highest number of outlier, which also are most far away from $IQR$. This affects the mean and the standard deviation values of `maxTuW`, which can also eventually affect performance of regression-based models.[^outliers] On the other hand, `Geo.mean` has only 3 outliers, whilst `Volatility` has only 2 outliers, which also are closer to IQR. 
+
+[^outliers]: [Towardsdatascience](https://towardsdatascience.com/skewed-data-a-problem-to-your-statistical-model-9a6b5bb74e37#:~:text=A%20data%20is%20called%20as,as%20on%20the%20right%20side)
 
 
 ```{R scatter, echo=FALSE, fig.cap="\\label{fig:scatter}The scatter plots of Geo.mean versus Volatility and Geomean versus maxTuW" ,fig.height=9, fig.width=9}
@@ -106,21 +128,25 @@ text(1.4, quantile(D$maxTuW), c("Min.", "Q1", "Q3/Median", "", "Max."))
 
 
 $$
-Y_i = \beta_0 + \beta_1x_{i,1} + \beta_2x_{2,i} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)
+Y_i = \beta_0 + \beta_1x_{1,i} + \beta_2x_{2,i} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)
 $$
-A model states that the geometric avarge rate of return is a function of volatility and maxTuW, where $x_1$ is the volatility and $x_2$ is the maxTuW. Here we assume that the residuals($\epsilon_i$) are independent and identically normally distributed random variables with zero mean and some unknown constant variance.       
+A model states that the geometric avarge rate of return is a function of `Volatility` and `maxTuW`, where $x_1$ is `Volatility` and $x_2$ is `maxTuW`. Here we assume that the residuals($\epsilon_i$) are independent and identically normally distributed random variables with zero mean and some unknown constant variance.       
 
 ## c) Estimate the parameters of the model
-
+<!--
 The summary of the model:
-
+-->
 ```{R echo=FALSE}
 #vola <- sin(D_model$Volatility)
 #fit <- lm(Geo.mean ~ vola + maxTuW, data = D_model)
 
 fit <- lm(Geo.mean ~ Volatility + maxTuW, data = D_model)
 
-summary(fit)
+
+summary <- summary(fit)
+
+knitr::kable(summary$coefficients,
+             caption = "\\label{tab:fit1} Summary of the model")
 
 # The observed values
 #plot(D_model$Volatility,D_model$Geo.mean)
@@ -129,7 +155,7 @@ summary(fit)
 ```
 
 
-From the R output above we can conclude:
+<!--From the Table \ref{tab:fit1} we can conclude:-->
 
 $$
 \begin{aligned}
@@ -146,9 +172,9 @@ r^2 = 0.1704
 $$
 
 
-$\hat\beta_0$ is the estimated intercept. The intercept theoretically means that when volatility is 0 and maxTuX is 0 than Geam.mean would be 0.25 with some error.
+$\hat\beta_0$ is the estimated intercept. The intercept theoretically means that when `Volatility` is 0 and `maxTuX` is 0 than `Geam.mean` would be around 0.25 with some error.
 
-$\hat\beta_1$ is the estimated effect of volatility and $\hat\beta_2$ is the estimated effect of maxTuW. The effect of volatility is accounted for the effect of maxTuW and viva verca. The negative effect of volatility and maxTuW means that if volatility or maxTuW increases, so Geo.mean decreases, or a lower volatility and a lower maxTuX gives higher Geo.mean.   
+$\hat\beta_1$ is the estimated effect of `Volatility` and $\hat\beta_2$ is the estimated effect of `maxTuW`. The effect of `Volatility` is accounted for the effect of `maxTuW` and viva verca. The negative effect of `Volatility` and `maxTuW` means that as `Volatility` or `maxTuW` increases, `Geo.mean` decreases.
 
 $\hat\sigma_{\beta_0}$, $\hat\sigma_{\beta_1}$ and $\hat\sigma_{\beta_1}$ are the estimated standard estimations of respectively $\hat\beta_0$, $\hat\beta_1$ and $\hat\beta_2$.
 
@@ -156,6 +182,7 @@ $df$ is is the degree of freedom used for the esimated residual variance $\hat\s
 
 $r^2$ is the explained variation.
 
+\pagebreak
 ## d) Model validation
 
 
@@ -200,7 +227,7 @@ plot(fit$fitted.values, D_model$Geo.mean, main="Observations against fitted valu
 ```
 
 
-
+<!--
 However, in order to be sure `ncvTest` is performed, which is found in `car` package. The function performs a hypothesis test, where "the null hypothesis of constant error variance against alternative that the error variance changes with the level of the response(fitted values)"[^ncvTest].  The output is below:
 
 [^ncvTest]:  https://www.rdocumentation.org/packages/car/versions/3.0-10/topics/ncvTest
@@ -212,11 +239,11 @@ ncvTest(fit)
 ```
 
 The p-values is 0.4873, so we can accept the null hypothesis of the constant variance assumption. 
-
+-->
 \pagebreak
 ### Linearity
 
-Here we will validate a linear relationship between the dependent variable and independent variables. From Figure \ref{fig:residuals_explanatory} it seems that there is a flat structure, suggesting a linear relationship between the geometric avarge rate of return and two explonatory variables, namely the volatility and the maxTuW. 
+In order to validate a linear relationship between the dependent variable and independent variables there are plotted the residuals as a function of the fitted values in Figure \ref{fig:residuals_explanatory}. It seems that there is a flat structure, suggesting a linear relationship between the geometric avarge rate of return and two explonatory variables, namely the volatility and the maxTuW. 
 
 <!--
 - Residuals vs each individual x'es in order to check wether x lineary influencing y. There should be a flat structure. If not flat, maybe there is some non linear relationship is going on. Kan man kalde "omvendt parabel" ? "It does not look linear. It seems that it afvige from linear, but there is not systematic dependance. 
@@ -240,9 +267,6 @@ plot(D_model$maxTuW, fit$residuals,
 
 
 ### Independance
-
-\colorbox{hightlightColor}{Skal jeg validere for independance?}
-
 
 Remark 5.29 says that "In general independence should also be chacked, while there are ways to do this we will not discuss them here", so I assume that it is not required to check for independance in this project.
 
@@ -313,6 +337,12 @@ The null hypothesis must be reject, because the p-value is less than 0.05. So it
 
 In the CI table in the e) exercise we can see that maxTuW is not significant(on a 5% level), because the confidence interval includes 0. It also has  a high p-value(0.251795.), which is found in the model summary in the c) exercise. So it makes sense to remove maxTuW from the model.
 
+So the final model is,  where $x_1$ is `Volatility`:
+$$
+Y_i = \beta_0 + \beta_1x_{i} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)
+$$
+
+
 The summary of the newly estimated model is below:
 
 
@@ -321,15 +351,12 @@ The summary of the newly estimated model is below:
 #fit <- lm(Geo.mean ~ vola + maxTuW, data = D_model)
 
 fit <- lm(Geo.mean ~ Volatility, data = D_model)
+summary <- summary(fit)
 
-summary(fit)
+knitr::kable(summary$coefficients,
+             caption = "\\label{tab:fit2} Summary of the model")
+
 ```
-
-So the final model,  where $x_1$ is the ¨volatility:
-$$
-Y_i = \beta_0 + \beta_1x_{i} + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2)
-$$
-
 
 
 And estimates of the parameters:

@@ -22,6 +22,22 @@ $$
 
 
 
+## Simulation
+
+$$
+A = X*Y
+$$
+
+Skal bruges simulering, fordi **ikke linær**. Det kunne dog være fint nok med $A=X+Y$
+
+Flere eksampler på "ikke-linær":
+
+$$
+Var(a_1X_1+a_2X_2^2 ....) \\
+Var(a_1X_1+a_2X_2^{-1} ....)
+$$
+
+
 ## Probability calculation
 
 **Given:**

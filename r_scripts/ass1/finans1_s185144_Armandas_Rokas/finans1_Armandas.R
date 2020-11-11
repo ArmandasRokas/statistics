@@ -23,6 +23,10 @@ plot(D$t, D$SPY, type="l", ylim=ylim, xlab="Date", ylab="Return SPY")
 boxplot(D$AGG, D$VAW, D$IWN, D$SPY, names=c("AGG", "VAW", "IWN", "SPY"),
         xlab="ETF", ylab="Return")
 text(4.54, quantile(D$SPY), c("Min", "Q1", "Median", "Q3", "Max"), cex= 0.6)
+length(boxplot.stats(D$AGG)$out)
+length(boxplot.stats(D$VAW)$out)
+length(boxplot.stats(D$IWN)$out)
+length(boxplot.stats(D$SPY)$out)
 
 # e) 
 

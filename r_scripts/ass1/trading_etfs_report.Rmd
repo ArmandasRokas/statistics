@@ -1,14 +1,15 @@
 ---
-title: 'Project 1: Trading ETFs'
+title: 'Project 1: Trading ETFs(Re-handin)'
 subtitle: "02323 Introduction to Statistics - Fall 2020"
 author: "Armandas Rokas(s185144)"
-date: "16/10/2020"
+date: "10/11/2020"
 output:
   pdf_document:
     toc: yes
     toc_depth: 3
 ---
 \pagenumbering{gobble} 
+\definecolor{h}{HTML}{FFFF66}
 
 
 \pagebreak
@@ -24,11 +25,14 @@ D <- D[ ,c("t","AGG","VAW","IWN","SPY")]
 \pagebreak
 \pagenumbering{arabic} 
 
+**!!!Det er er en genaflvering. Alle rettelser eller tilføjelser er markeret i kursiv. Alt R-outputtet blev også fjernet, som jeg fik en besked om.** 
+
 ## Descriptive analysis
 
 ### a) A short description of the data
 
-- Quantitative data
+- The weekly returns of ETF's are quantitative data.
+- *Time is the type of Date.*
 - Date of first observation: `2006-05-05`, Date of the last observation: `2015-05-08`
 ```{r include=FALSE}
 D$t <- as.Date(D$t)
@@ -62,32 +66,46 @@ sum(is.na(D))
 \pagebreak
 
 ### c) Plots illustrating the weekly returns over time
+<!--
+\colorbox{h}{Kunne være fedt at tegne grafen hvis den under 0, så rød, hvis det er over 0 så grøn.}
+-->
+In general from the plots in Figures 2, 3, 4 and 5 in the following pages the level of returns seem to change over time. The most significant different period is around 2008-2010, *where the volatility is highest for all for ETF's. This could be related to the global financial crisis. In addition the volatility of all four ETF's is higher in the second half-year of 2011, which could be related to European sovereign debt crisis.* [^crisis]
 
-- From the plots below the level of returns seem to change over time. The most significant different periods are around 2008-2010 and 2011-2012 where level of return is increased. 
-- AGG stands out from others by having a smaller variance. 
+[^crisis]: https://en.wikipedia.org/wiki/August_2011_stock_markets_fall
+  
+  Specifically AGG stands out from others by having the smallest volatility. *AGG also dropped least in the global financial crisis.*
+  
+  *On the other hand it seems that VAW has the highest volatility. Moreover, VAW had the biggest drop in the global finance crisis, where it felt at most more than 20% in a week.* 
+  
+  *SPY and IWN seems to be in between of these two above mentioned EFT's in relation to volatility. However SPY seems to have smaller volatility than IWN. In addition SPY didn't drop that much in the global finance crisis as IWN.*
+  
+  *Lastly from 2012 it seems that all four ETF's had more constant volatility and the weekly returns of all four ETF's were more positive than negative.*
  
-
-![AGG weekly returns](images/returns_AGG.png)
-
-\pagebreak
-
-![VAW weekly returns](images/returns_VAW.png)
-
-![IWN weekly returns](images/return_IWN.png)
-\pagebreak
-
-![SPY weekly returns](images/returns_SPY.png)
-
+<!--and 2011-2012 where level of return is increased.-->
 
 \pagebreak
-\newpage
+
+![AGG weekly returns](images/returns_AGG.png){width=85%}
+
+
+
+
+![VAW weekly returns](images/returns_VAW.png){width=85%}
+
+![IWN weekly returns](images/return_IWN.png){width=85%}
+
+
+![SPY weekly returns](images/returns_SPY.png){width=85%}
+
+
+\pagebreak
 
 
 ### d) A box plot of the weekly returns 
 
-- From the box plot below there seems to be a difference between the distributions in the way that VAW is more skewed than others.  VAW has left-skewed distribution, because the left tail is longer than the right tail. Others EFTs seems to have less skewed distributions.
-- Moreover AGG has much narrower IQR  than other ETFs
-- The extreme observations (outside a distance of $1.5*\text{IQR}$) here are plotted individually, so yes there are plenty of these. 
+- From the box plot below there seems to be a difference between the distributions in the way that VAW has the most left-skewed distribution, because the left tail is longer than the right tail. *IWN and SPY are similarly left-skewed, but less than VAW. Only AGG seems to be a bit right-skewed.*
+- Moreover AGG has the narrowest IQR. *SPY has the second narrowest IQR, then goes IWN and lastly VAW has the widest IQR.*
+- The extreme observations are outside a distance of $1.5*\text{IQR}$ from $Q_1$/$Q_3$. In the box plot below outliers are plotted individually, so yes there are plenty of these. *In addition it seems that VAW has the highest number of outliers, which are also the most dispersed. IWN has the second highest number of outliers. Then there is SPY and AGG has the least number of outliers.* 
 
 
 ![A box plot of the weekly returns of AGG, VAW, IWN and SPY](images/returns_box.png)
@@ -110,7 +128,14 @@ sum(is.na(D))
 | **Median**($Q_2$)           | 0.0002374   | 0.004798    | 0.003120    | 0.004216     |
 | **Upper quartile**($Q_3$)   | 0.0038932   | 0.019685    | 0.019056    | 0.014498     |
 
-- One could gain information about differences between the means and  the medians, so it is easier to determine if data is skewed. 
+- *From the table we could clearly see that all ETF's have equally 454 observations.*
+- In the table there are also the means and the medians of ETF's. These values underpin the findings in relation to the skewness in the section above. 
+    - *AGG is right-skewed distribution, because AGG's mean of 0.000266 is higher than (right of)  AGG's median of 0.000237.*
+    - *VAW is left-skewed  distribution, because VAW's mean of 0.00179 is less than(left of) VAW's median of 0.00479.*
+    - *IWN is left-skewed  distribution, because IWN's mean of 0.00119 is less than IWN's median of 0.0031.*
+    - *And lastly SPY is also left-skewed  distribution, because SPY's mean of 0.00136 is less then SPY's median of 0.00421. *
+- *In addition one could gain information about volatility from sample variance or standard deviation parameters. So from the table we can conclude that VAW has the highest standard deviation. IWN has the second highest standard deviation. SPY has the third highest standard deviation, whilst AGG has the lowest standard deviation of the all four ETF's.* 
+- *Lastly Lower and Upper quartiles shows the spread of the data. These values could also help to determine IQR, which could be used to find outliers.* 
 
 \pagebreak
 
@@ -130,31 +155,39 @@ SPY \sim N(0.001360105,0.02478601^2 ) \\
 \end{aligned}
 $$
 
-- In order to perform normality validation there are produced Wally plots: 
+#### Normality assumptions
 
-
-![The wally plot of AGG](images/wally_AGG.png)
-
-\pagebreak
-
-
-![The wally plot of VAW](images/wally_VAW.png)
-
-\pagebreak
-
-
-![The wally plot of IWN](images/wally_IWN.png)
-
-
-\pagebreak
-
-![The wally plot of SPY](images/wally_SPY.png)
-
-
-- It seems from wally plots below that the weekly returns of these four ETFs don't follow a normal distribution, because the data for all ETFs deviates more from the qqline than the simulated data in the wally plots. It is however more similar to the heavy-tailed distribution[^HEAVYTAILED]. 
+- In order to perform normality validation there are produced Wally plots, which are in Figures 7, 8, 9 and 10 in the following pages.
+- It seems from wally plots that the weekly returns of these four ETFs don't follow a normal distribution, because the data for all ETFs deviates more from the qqline than the simulated data in the wally plots. It is however more similar to the heavy-tailed distribution[^HEAVYTAILED]. 
 - When we cannot assume a normal distribution comes CLT to rescue, because CLT states that "The underlying distribution of a sample can be disregarded when carrying out inference related to the the mean" [^DTU] (p. 136). This means that we can still define CIs and make Hypothesis tests for the mean based on the standard normal quantiles/t-quantiles, although the distribution of weekly returns doesn't follows a normal distribution, because the sample means of repeatedly taken large enough samples ($n>=30$) follows normal distribution.
-- Moreover, "The t-test assumes that the means of the different samples are normally distributed; it does not assume that the population is normally distributed". [^TTEST]
+- Moreover, "The t-test assumes that the means of the different samples are normally distributed; it does not assume that the population is normally distributed". [^TTEST] 
 
+#### Independence assumptions
+
+- *We know that the data were collected consistent at the beginning and at the end of every week over the given time period. So there is no sign for any independence violation. Therefore we can conclude that the assumption of independence holds for this dataset.*
+
+\pagebreak 
+
+![The wally plot of AGG](images/wally_AGG.png){width=70%}
+
+
+
+![The wally plot of VAW](images/wally_VAW.png){width=70%}
+
+
+
+![The wally plot of IWN](images/wally_IWN.png){width=70%}
+
+
+![The wally plot of SPY](images/wally_SPY.png){width=70%}
+
+
+
+
+
+
+
+<!--the initial pricen and the final price of every week.--> 
 
 <!--It is because the data for all ETFs deviates more from the qqline(a straight line through the 1st and 3rd quantiles) than the simulated data in the wally plots. It seems though that these follows --> 
 <!--Cauchy-->
@@ -175,6 +208,7 @@ $$
 | SPY  | -0.000925960      | 0.003646171       |
 
 ##### First define t-quantile, which is going to be used in the formulas
+
 - $t_{0.975}$ 0.975 t-quantile with n-1=434 degress of freedom equals to 1.965215:
 
 ```{r include=FALSE}
@@ -191,12 +225,13 @@ $$
 = 0.000265757 \pm 0.0005511643 = [-0.0002854073, 0.0008169213 ]
 \end{aligned}
 $$
-
+<!--
 The same results could be produced by `t.test`:
 
 ```{R echo=FALSE}
 t.test(D$AGG, conf.level=0.95)$conf.int
 ```
+-->
 
 ##### CI for VAW
 
@@ -206,12 +241,13 @@ $$
 * \frac{0.03608286}{\sqrt{454}} = \\=  0.00179379 \pm  0.003327998 = [-0.001534208,  0.005121788 ]
 \end{aligned}
 $$
-
+<!--
 The same results could be produced by `t.test`:
 
 ```{R echo=FALSE}
 t.test(D$VAW, conf.level=0.95)$conf.int
 ```
+-->
 
 ##### CI for IWN
 
@@ -220,11 +256,13 @@ $$
 \bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} =0.001187679 \pm 1.965215* \frac{0.03201547}{\sqrt{454}} = \\= 0.001187679  \pm 0.002952853  = [-0.001765174,  0.004140533 ]
 \end{aligned}
 $$
+<!--
 The same results could be produced by `t.test`:
 
 ```{R echo=FALSE}
 t.test(D$IWN, conf.level=0.95)$conf.int
 ```
+-->
 
 ##### CI for SPY
 
@@ -233,14 +271,16 @@ $$
 \bar{x}\pm t_{0.975}* \frac{s}{\sqrt{n}} = 0.001360105 \pm 1.965215* \frac{0.02478601}{\sqrt{454}} = \\= 0.001360105  \pm 0.002286065  = [-0.000925960, 0.003646171]
 \end{aligned}
 $$
-
+<!--
 The same results could be produced by `t.test`: 
 
 ```{R echo=FALSE}
 t.test(D$SPY, conf.level=0.95)$conf.int
 ```
+-->
 
 #### Note
+
  95% CI means that we can only be sure 95% that our calculated CI will contain the true mean. That is, if we could take 100 samples and calculate CI, only 95 of these would contain the true mean.
 
 ### h) Hypothesis test
@@ -277,10 +317,10 @@ $$
 
 **3.  Conclusion:**
 
-$\text{p-value}$ (0.3438511) is more than $\alpha$ (0.05), so we can accept $H_{0}$.  So the mean weekly returns from AGG does not deviate significantly from the returns obtained by saving money under the pillow.
+$\text{p-value}$ (0.3438511) is more than $\alpha$ (0.05), so we *failed to reject* $H_{0}$.  That means that the mean weekly returns from AGG does not deviate significantly from the returns obtained by saving money under the pillow.
 
  The same conclusion could have been reached using the CI, because it includes 0, which means that 0 is accepted value at 95% significant level.
- 
+ <!--
 **t.test** 
 
 The same p-value could be produced by `t.test`:
@@ -288,15 +328,15 @@ The same p-value could be produced by `t.test`:
 ```{R echo=FALSE}
 t.test(D$AGG, mu=0)
 ```
-
+-->
 
 ### i) Welch t-test for compering AGG and VEW 
 
 
 $$
 \begin{aligned}
-H_{0} \ : \ \mu_{AGG}= \mu_{VAW} \equiv \mu_{AGG}-\mu_{VAW}= 0 \\
-H_{1}\ : \ \mu_{AGG} \ne \mu_{VAW} \equiv \mu_{AGG}-\mu_{VAW}\ne 0
+H_{0} \ : \ \mu_{AGG}= \mu_{VAW}  \\
+H_{1}\ : \ \mu_{AGG} \ne \mu_{VAW} 
 \end{aligned}
 $$
 
@@ -346,7 +386,7 @@ $$
 
 On a 5% level we cannot conclude a significant difference in the mean weekly return differs, because the calculated $\text{p-value}=0.3738104 > \alpha=0.05$  
 
-
+<!--
 **t.test** 
 
 The same p-value could be produced by `t.test`:
@@ -354,38 +394,40 @@ The same p-value could be produced by `t.test`:
 ```{R echo=FALSE}
 t.test(D$VAW, D$AGG)
 ```
-
+-->
 
 ### j) Conclusion from CIs
 
 According to Remark 3.59, if CIs do overlap (like in this case), then the same conclusion couldn't be drawn from CIs. So it was necessary to carry out the statistical test.   
 
-
+\pagebreak
 
 ### k) Correlation
 
 <!--JEg er lidt forvirrede her omkring, hvilke notation skal jeg bruge her? Side 275 eller  Definition 1.18-->
 
-- Covariance between VAW and IWN: 
+*Correlation in general quantifies the strength of the relationship between two variables, but it doesn't  mean that one variable cause the other or vice versa. In financial market it can be used in the portfolio risk management.[^investopedia]*
+
+[^investopedia]: https://www.investopedia.com/terms/c/correlation.asp
+
+
+- Covariance between VAW and IWN is calculated by : 
 
 $$
 s_{VAWIWN} = \frac{1}{n-1}\sum_{i=1}^{n}{(VAW_{i}-\bar{VAW})(IWN_{i}-\bar{IWN})} = 0.0009838237
 $$
 
-- Correlation between VAW and IWN:
+- Correlation between VAW and IWN is calculated by:
 
 $$
 r = \frac{s_{VAWIWN}}{s_{VAW}*s_{IWN}} = 0.8516407
 $$
 
+The correlation of $0.85$ shows moderately strong linear relationship, which has a positive general trend. *This means as IWN increases, VAW does so as well and vice versa.* 
 
-- The calculated correlation is the same as in the table produced with `cor` below. 
+<!-- https://english.stackexchange.com/questions/30285/what-is-the-term-used-for-saying-if-something-increases-decreases-it-has-no-effe -->
 
-```{R echo=FALSE}
-cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")
-```
-
-- Lastly, the scatter plot below illustrates as expected moderately strong linear relationship, which has a positive general trend.
+*The same conclusion could be drawn from the scatter plot in Figure 10 below, because the most of observations are in the first and third quadrant, which forms a line going uphill.*
 
 ![The scatter plot between IWN and VAW](images/corr_VAW_IWN.png)
 
@@ -393,6 +435,11 @@ cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")
 # plot(D$VAW, D$IWN, xlab="VAW", ylab="IWN")
 ```
 
+<!--The calculated correlation is the same as in the table produced with `cor` below.-->
+
+```{R include=FALSE}
+cor(D[ ,c("AGG","VAW","IWN","SPY")], use="pairwise.complete.obs")
+```
 
 
 [^DTU]: Per B. Brockhoff, Jan K. Møller, Elisabeth W. Andersen Peder Bacher, Lasse E. Christiansen. "Introduction to Statistics at DTU". 2018 Fall
