@@ -27,4 +27,4 @@ t.test2 <- function(m1,m2,s1,s2,n1,n2,m0=0,equal.variance=FALSE, conf.int=0.05)
   
   return(dat) 
 }
-t.test2(m1=78.34444, m2=74.29000, s1=1.898, s2=2.115 , n1=9, n2=10, conf.int = 0.01)
+t.test2(m1=1.99, m2=1.14, s1=0.58, s2=0.84 , n1=5, n2=10, conf.int = 0.05)

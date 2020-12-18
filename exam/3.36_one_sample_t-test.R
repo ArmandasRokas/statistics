@@ -1,3 +1,5 @@
+# Attention! Not suitable for linear regression t-test for parameter
+
 x_bar <- -22.6
 mu_0 <- 0
 s <- 45.5

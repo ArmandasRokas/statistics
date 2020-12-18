@@ -20,6 +20,13 @@ $$
 \sigma^2 = Var(\sum_{i=1}^{100}Y_i)= Var(Y_i) + Var(Y_2) + ... + Var(Y_{100}) = 100 * 0.4 = 40
 $$
 
+## The average of j independent random variables $X_1,...X_{10}$, each with the same distribution as $X$
+
+$$
+E(\frac{1}{10}\sum_{i=1}^{10}E(X_i))= \frac{1}{10}*10*\mu = \mu \\
+V(\frac{1}{10}\sum_{i=1}^{10}V(X_i))= \frac{1}{10^2}*10*\sigma^2 = \frac{1}{10}*\sigma^2
+$$
+
 
 
 ## Simulation
