@@ -1,5 +1,10 @@
-data <- c(18,11,22,9,38,36,15,12)
-X <- matrix(data, nrow =2, byrow=TRUE) # Filled by columns 
+data <- c(62,
+          255,
+          113,
+          433,
+          37,
+          153)
+X <- matrix(data, nrow =2, byrow=FALSE) # Filled by columns 
 X
 res <- chisq.test(X, correct = FALSE)
 res
