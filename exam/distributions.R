@@ -4,7 +4,7 @@ qqnorm(l)
 qqline(l)
 
 # Chi squared
-c <- rchisq(1000,df=12)
+c <- rchisq(100000,df=3)
 hist(c)
 
 

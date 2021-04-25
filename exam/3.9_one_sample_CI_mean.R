@@ -1,8 +1,8 @@
 # Insert
-x_bar <- 453.279
-sd <- 272.322
-alpha <- 0.05
-n <-1310
+x_bar <- 10.84
+sd <- 7.133105
+alpha <- 0.01
+n <-90
 
 
 # Calculate

@@ -32,17 +32,17 @@ p_value <- 1-pf(abs(fobs),df1=k-1,df2=n-k)
 p_value
 
 # From p_value to Fobs
-p_value <- 0.00014
-k <- 4 # Number of groups
-n <- 32 # Number of all observations
+p_value <- 0.05
+k <- 6 # Number of groups
+n <- 357 # Number of all observations
 fobs <- qf(1-p_value, df1=k-1,df2=n-k)
 fobs
 
 
 ######## ChiSq-distribution ########
 # From chiobs to p_value
-chiobs <- 9.6127
-nrow <- 2
+chiobs <- 29
+nrow <- 5
 ncol <- 4
 p_value <- 1-pchisq(abs(chiobs), df=(nrow-1)*(ncol-1))
 p_value
